@@ -28,9 +28,9 @@ remove.lindep <- function(x, y, ry, eps = 1e-04, maxcor = 0.99,
   yobs <- as.numeric(y[ry])
   if (var(yobs) < eps) return(rep(FALSE, ncol(xobs)))
   
-  keep <- unlist(apply(xobs, 2, var) > eps)
+  keep <- unlist(apply(xobs, 2, var, na.rm = T) > eps)
   keep[is.na(keep)] <- FALSE
-  highcor <- suppressWarnings(unlist(apply(xobs, 2, cor, yobs) < maxcor))
+  highcor <- suppressWarnings(unlist(apply(xobs, 2, cor, yobs, na.rm = T) < maxcor))
   keep <- keep & highcor
   if (all(!keep))
     updateLog(out = "All predictors are constant or have too high correlation.", 
@@ -41,7 +41,7 @@ remove.lindep <- function(x, y, ry, eps = 1e-04, maxcor = 0.99,
   if (k <= 1L) return(keep)  # at most one TRUE
   
   # correlation between x's
-  cx <- cor(xobs[, keep, drop = FALSE], use = "all.obs")
+  cx <- cor(xobs[, keep, drop = FALSE], use = "pairwise.complete.obs")
   eig <- eigen(cx, symmetric = TRUE)
   ncx <- cx
   while (eig$values[k]/eig$values[1] < eps) {
