@@ -76,8 +76,8 @@ sampler <- function(data, m, where, imp, blocks, method, visitSequence,
                              calltype = calltype, 
                              user = user, ...)
               
-              data[(!r[, j]) & where[, j], j] <- 
-                imp[[j]][(!r[, j])[where[, j]], i]
+              data[(!r[, j]) & where[, j], j] <-
+                imp[[j]][(!r[, j])[where[, j]], i]   # updating data frame!
               
               # optional post-processing
               cmd <- post[j]
